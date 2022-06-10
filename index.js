@@ -17,10 +17,7 @@ Qpdf.encrypt = function(input, options, callback) {
   var args = [Qpdf.command, '--encrypt'];
 
   // Set user-password and owner-password
-  if(typeof options.password === 'object') {
-    if(options.password.user === undefined || options.password.owner === undefined) {
-      return handleError(new Error('Specify owner and user password'));
-    }
+  if (typeof options.password === 'object') {
     args.push(options.password.user);
     args.push(options.password.owner);
   } else {
@@ -85,7 +82,6 @@ Qpdf.encrypt = function(input, options, callback) {
 
 Qpdf.decrypt = function(input, password, callback) {
   if (!input) return handleError(new Error('Specify input file'), callback);
-  if (!password) return handleError(new Error('Password missing'), callback);
 
   var args = [Qpdf.command, '--decrypt'];
 
@@ -115,7 +111,7 @@ function executeCommand(args, callback) {
     child = spawn(args[0], args.slice(1));
   } else {
     // this nasty business prevents piping problems on linux
-    child = spawn('/bin/sh', ['-c', args.join(' ') + ' | cat']);
+    child = spawn('/bin/sh', ['-c', args.join(' ') + ' --allow-insecure | cat']);
   }
 
   // call the callback with null error when the process exits successfully
